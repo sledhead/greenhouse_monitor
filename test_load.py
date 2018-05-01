@@ -43,3 +43,11 @@ pass_email = str(setting_data['emailpass'])
 link_htp = str(setting_data['weblink'])
 
 response = urllib2.urlopen(link_htp)
+
+print response.info()
+print response.code
+
+html = response.read()
+response.close()
+
+print html
