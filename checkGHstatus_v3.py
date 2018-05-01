@@ -87,6 +87,17 @@ while( bKeepLooping == True ):
 			temp_str += '\nControl Green House Temp:' + str(json_result["row0"][0]["con_temp"])
 			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
 			SendEmail(temp_str,'858 temp problem')
+			
+		if( float(json_result["row0"][0]["gh_ntemp"]) >  95 ):
+			#Above the defined limit
+			#Send error msg
+			print 'Hit temp. level'
+			temp_str = 'North Green House section is above defined limit\n'
+			temp_str += 'North Green House Temp:' + str(json_result["row0"][0]["gh_ntemp"])
+			temp_str += '\nSouth Green House Temp:' + str(json_result["row0"][0]["gh_stemp"])
+			temp_str += '\nControl Green House Temp:' + str(json_result["row0"][0]["con_temp"])
+			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
+			SendEmail(temp_str,'858 temp problem')
 
 		#Sleep a minute or two before moving ahead
 		time.sleep(240)
