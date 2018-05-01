@@ -42,4 +42,4 @@ pass_email = str(setting_data['emailpass'])
 
 link_htp = str(setting_data['weblink'])
 
-
+response = urllib2.urlopen(link_htp)
