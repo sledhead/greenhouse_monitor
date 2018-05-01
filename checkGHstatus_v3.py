@@ -4,6 +4,7 @@ import urllib2
 import json
 import re
 import time
+from playsound import playsound
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
@@ -43,9 +44,12 @@ pass_email = str(setting_data['emailpass'])
 link_htp = str(setting_data['weblink'])
 
 bKeepLooping = True
+bLimitLoopTime = False
+
 while( bKeepLooping == True ):
 
 	bWebConnectProblem = False
+	bLimitLoopTime = False
 
 	try:
 		response = urllib2.urlopen(link_htp)
@@ -88,7 +92,7 @@ while( bKeepLooping == True ):
 			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
 			SendEmail(temp_str,'858 temp problem')
 			
-		if( float(json_result["row0"][0]["gh_ntemp"]) >  95 ):
+		if( float(json_result["row0"][0]["gh_ntemp"]) >  90 ):
 			#Above the defined limit
 			#Send error msg
 			print 'Hit temp. level'
@@ -98,9 +102,23 @@ while( bKeepLooping == True ):
 			temp_str += '\nControl Green House Temp:' + str(json_result["row0"][0]["con_temp"])
 			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
 			SendEmail(temp_str,'858 temp problem')
+			
+			#play sound bit
+			playsound('sounds/i-dock.mp3')
+			
+			#When high temp limit has been reached
+			#set flag so that we check more often and play WARNING
+			#sound more often
+			bLimitLoopTime = True
 
 		#Sleep a minute or two before moving ahead
-		time.sleep(240)
+		if( bLimitLoopTime == True ):
+			#sleep for less time
+			
+			time.sleep(30)
+		else:
+			time.sleep(240)
+			
 		print 'done sleeping'
 
 		#Before beginning the loop again, see if user wants to end program
