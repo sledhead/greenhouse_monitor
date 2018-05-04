@@ -6,6 +6,7 @@ import json
 import re
 import time
 from playsound import playsound
+import os
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -47,7 +48,7 @@ def Speak_Msg( err_msg, low_or_high ):
 		#for a high temperature condition
 		playsound('sounds/high_limit.mp3')
 		
-	time.sleep(15)
+	time.sleep(10)
 	sound_bit = gTTS(err_msg)
 	sound_bit.save("sounds/cool.mp3")
 	playsound('sounds/cool.mp3')
@@ -165,9 +166,9 @@ while( bKeepLooping == True ):
 		if( bLimitLoopTime == True ):
 			#sleep for less time
 			
-			time.sleep(30)
+			time.sleep(60)
 		else:
-			time.sleep(120)
+			time.sleep(180)
 			
 		print ('done sleeping')
 
