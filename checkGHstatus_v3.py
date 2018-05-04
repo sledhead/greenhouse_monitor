@@ -56,7 +56,7 @@ def Speak_Msg( err_msg, low_or_high ):
 	os.remove('sounds/cool.mp3')
 	print ('sleeping now')
 	#Sleep a minute or two before moving ahead
-	time.sleep(45)
+	time.sleep(60)
 			
 		
 #Load setting file
@@ -79,15 +79,25 @@ while( bKeepLooping == True ):
 
 	try:
 		response = requests.get(link_htp)
+		response.raise_for_status()
 		
-	except urllib2.HTTPError as e:
-		err_msg = 'The server could not fulfill the request. The error code is:' + e.code
+	except requests.exceptions.HTTPError as errh:
+		err_msg = 'The server could not fulfill the request. The error code is:' + errh.code
 		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
-	except urllib2.URLError as e:
-		print "error"
-		SendEmail('Connecting to raspberry pi web server failed','979 http connection problem')
+	except requests.exceptions.ConnectionError as errc:
+		err_msg = 'The server could not fulfill the request. The error code is:' + errc.code
+		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
+	except requests.exceptions.Timeout as errt:
+		err_msg = 'The server could not fulfill the request. The error code is:' + errt.code
+		SendEmail(err_msg,'979 web server problem')
+		bWebConnectProblem = True
+	except requests.exceptions.RequestException as err:
+		err_msg = 'The server could not fulfill the request. The error code is:' + err.code
+		SendEmail(err_msg,'979 web server problem')
+		bWebConnectProblem = True
+	
 	else:
 		#print response.info()
 		print (response.status_code)
@@ -151,14 +161,15 @@ while( bKeepLooping == True ):
 			bLimitLoopTime = True
 
 		#Sleep a minute or two before moving ahead
+		print ("begin layover")
 		if( bLimitLoopTime == True ):
 			#sleep for less time
 			
 			time.sleep(30)
 		else:
-			time.sleep(240)
+			time.sleep(120)
 			
-		print 'done sleeping'
+		print ('done sleeping')
 
 		#Before beginning the loop again, see if user wants to end program
 		setting_file = open('Gather.txt','r')
