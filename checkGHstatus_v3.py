@@ -34,6 +34,8 @@ def SendEmail(email_body, email_subject):
 	server.close()
 
 
+def Speak_Msg( err_msg, low_or_high ):
+	#Function will speak error message by computer speakers.
 #Load setting file
 with open("Settings.txt","r") as file_set:
 	setting_data = json.load(file_set)
@@ -53,7 +55,7 @@ while( bKeepLooping == True ):
 	bLimitLoopTime = False
 
 	try:
-		response = urllib2.urlopen(link_htp)
+		response = requests.get(link_htp)
 		
 	except urllib2.HTTPError as e:
 		err_msg = 'The server could not fulfill the request. The error code is:' + e.code
@@ -64,10 +66,10 @@ while( bKeepLooping == True ):
 		SendEmail('Connecting to raspberry pi web server failed','979 http connection problem')
 		bWebConnectProblem = True
 	else:
-		print response.info()
-		print response.code
-		web_server_code = response.code
-		html = response.read()
+		#print response.info()
+		print (response.status_code)
+		#web_server_code = response.code
+		html = response.text
 		response.close()
 
 		#check web server response code:
@@ -78,14 +80,14 @@ while( bKeepLooping == True ):
 		#print html
 		json_result = json.loads(html)
 
-		print json_result["row0"][0]["gh_ntemp"]
+		print (json_result["row0"][0]["gh_ntemp"])
 		#print type(json_result["row0"][0]["gh_ntemp"])
 
 		#test the json result, see if the temp values are outside of margins
 		if( float(json_result["row0"][0]["gh_ntemp"]) <  48 ):
 			#Below the defined limit
 			#Send error msg
-			print 'Hit temp. level'
+			print ('Hit temp. level')
 			temp_str = 'North Green House section is below defined limit\n'
 			temp_str += 'North Green House Temp:' + str(json_result["row0"][0]["gh_ntemp"])
 			temp_str += '\nSouth Green House Temp:' + str(json_result["row0"][0]["gh_stemp"])
@@ -93,10 +95,17 @@ while( bKeepLooping == True ):
 			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
 			SendEmail(temp_str,'858 temp problem')
 			
+			#Section tells the user what the current temperature is
+			audio_str = 'The temperature in the north half of the greenhouse is:' + str(json_result["row0"][0]["gh_ntemp"]) + " degrees."
+			audio_str += 'The temperature in the south half of the greenhouse is:' + str(json_result["row0"][0]["gh_stemp"]) + " degrees."
+			audio_str += 'The Control Box temperature is:' + str(json_result["row0"][0]["con_temp"]) + " degrees."
+			
+			Speak_Msg( audio_str , "low" )
+			
 		if( float(json_result["row0"][0]["gh_ntemp"]) >  90 ):
 			#Above the defined limit
 			#Send error msg
-			print 'Hit temp. level'
+			print ('Hit temp. level')
 			temp_str = 'North Green House section is above defined limit\n'
 			temp_str += 'North Green House Temp:' + str(json_result["row0"][0]["gh_ntemp"])
 			temp_str += '\nSouth Green House Temp:' + str(json_result["row0"][0]["gh_stemp"])
@@ -104,8 +113,14 @@ while( bKeepLooping == True ):
 			temp_str += '\nOutside Green House Temp:' + str(json_result["row0"][0]["out_temp"])
 			SendEmail(temp_str,'858 temp problem')
 			
+			#Section tells the user what the current temperature is
+			audio_str = 'The temperature in the north half of the greenhouse is:' + str(json_result["row0"][0]["gh_ntemp"]) + " degrees."
+			audio_str += 'The temperature in the south half of the greenhouse is:' + str(json_result["row0"][0]["gh_stemp"]) + " degrees."
+			audio_str += 'The Control Box temperature is:' + str(json_result["row0"][0]["con_temp"]) + " degrees."
+			
+			Speak_Msg( audio_str , "high" )
 			#play sound bit
-			playsound('sounds/i-dock.mp3')
+			#playsound('sounds/i-dock.mp3')
 			
 			#When high temp limit has been reached
 			#set flag so that we check more often and play WARNING
@@ -130,7 +145,7 @@ while( bKeepLooping == True ):
 		run_status = re.search(r'no',single_line,re.M|re.I)
 		if(run_status):
 			#User set line to no, quit running program
-			print 'Stopping program execution'
+			print ('Stopping program execution')
 			bKeepLooping = False
 	else:
 		time.sleep(180)
