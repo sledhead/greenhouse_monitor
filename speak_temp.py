@@ -69,13 +69,15 @@ temp_str += 'The Control Box temperature is:' + str(json_result["row0"][0]["con_
 #print (temp_str)
 #sound_bit = gTTS(temp_str)
 #sound_bit.save("cool.mp3")
-
+print("send email")
+SendEmail("This is coming from Montana","Montana Test")
+print("done email")
 bKeepLooping = True
 bLimitLoopTime = False
 
 while( bKeepLooping == True ):
 
-	bWebConnectProblem = False
+	bWebConnectProblem = True
 	bLimitLoopTime = False
 
 	
@@ -122,5 +124,6 @@ while( bKeepLooping == True ):
 			bKeepLooping = False
 	else:
 		time.sleep(180)	
+		print ("In the sleep section")
 #play sound bit
 #playsound('sounds/sound1.mp3')

@@ -1,14 +1,15 @@
 
 
-import urllib2
+import requests
+from gtts import gTTS
 import json
 import re
 import time
 from playsound import playsound
 
 import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 def SendEmail(email_body, email_subject):
