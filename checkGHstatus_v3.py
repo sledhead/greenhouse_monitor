@@ -36,6 +36,29 @@ def SendEmail(email_body, email_subject):
 
 def Speak_Msg( err_msg, low_or_high ):
 	#Function will speak error message by computer speakers.
+	
+	if( low_or_high == "low" ):
+		#play two audio files... One prerecorded
+		#for a low temperature condition
+		playsound('sounds/low_limit.mp3')
+		
+	if( low_or_high == "high" ):
+		#play two audio files... One prerecorded
+		#for a high temperature condition
+		playsound('sounds/high_limit.mp3')
+		
+	time.sleep(15)
+	sound_bit = gTTS(err_msg)
+	sound_bit.save("sounds/cool.mp3")
+	playsound('sounds/cool.mp3')
+	#after playing sound file delete
+	time.sleep(20)
+	os.remove('sounds/cool.mp3')
+	print ('sleeping now')
+	#Sleep a minute or two before moving ahead
+	time.sleep(45)
+			
+		
 #Load setting file
 with open("Settings.txt","r") as file_set:
 	setting_data = json.load(file_set)
