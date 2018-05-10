@@ -83,19 +83,19 @@ while( bKeepLooping == True ):
 		response.raise_for_status()
 		
 	except requests.exceptions.HTTPError as errh:
-		err_msg = 'The server could not fulfill the request. The error code is:' + errh.code
+		err_msg = 'The server could not fulfill the request. The error code is:' + str(errh)
 		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
 	except requests.exceptions.ConnectionError as errc:
-		err_msg = 'The server could not fulfill the request. The error code is:' + errc.code
+		err_msg = 'The server could not fulfill the request. The error code is:' + str(errc)
 		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
 	except requests.exceptions.Timeout as errt:
-		err_msg = 'The server could not fulfill the request. The error code is:' + errt.code
+		err_msg = 'The server could not fulfill the request. The error code is:' + str(errt)
 		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
 	except requests.exceptions.RequestException as err:
-		err_msg = 'The server could not fulfill the request. The error code is:' + err.code
+		err_msg = 'The server could not fulfill the request. The error code is:' + str(err)
 		SendEmail(err_msg,'979 web server problem')
 		bWebConnectProblem = True
 	
@@ -184,4 +184,5 @@ while( bKeepLooping == True ):
 			bKeepLooping = False
 	else:
 		time.sleep(180)
+		print ("Some connection problems")
 
