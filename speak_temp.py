@@ -67,7 +67,7 @@ temp_str += 'The temperature in the south half of the greenhouse is:' + str(json
 temp_str += 'The Control Box temperature is:' + str(json_result["row0"][0]["con_temp"]) + " degrees."
 
 print ("Warning Temperature is at low limit")
-sound_bit = gTTS("Warning Temperature is at high limit")
+sound_bit = gTTS("Warning Plant destruction is imminent")
 sound_bit.save("cool.mp3")
 print("send email")
 SendEmail("This is coming from Montana","Montana Test")

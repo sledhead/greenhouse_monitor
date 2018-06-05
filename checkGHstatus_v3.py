@@ -118,7 +118,7 @@ while( bKeepLooping == True ):
 		#print type(json_result["row0"][0]["gh_ntemp"])
 
 		#test the json result, see if the temp values are outside of margins
-		if( float(json_result["row0"][0]["gh_ntemp"]) <  48 ):
+		if( float(json_result["row0"][0]["gh_ntemp"]) <  40 ):
 			#Below the defined limit
 			#Send error msg
 			print ('Hit temp. level')
